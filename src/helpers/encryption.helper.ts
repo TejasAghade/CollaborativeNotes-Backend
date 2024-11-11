@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import bcrypt from 'bcrypt';
+// import bcrypt from 'bcrypt';
 
 
 class EncryptionHelper {
@@ -37,15 +37,15 @@ class EncryptionHelper {
         return decrypted;
     }
 
-    static encryptPassword = async (password: string) => {
-        let salt = process.env.SALT;
-        let hash = await bcrypt.hash(password, parseInt(salt));
-        return hash;
-    }
+    // static encryptPassword = async (password: string) => {
+    //     let salt = process.env.SALT;
+    //     let hash = await bcrypt.hash(password, parseInt(salt));
+    //     return hash;
+    // }
 
-    static validatePassoword = async (password: string, hash: string) => {
-        return await bcrypt.compare(password, hash);
-    }
+    // static validatePassoword = async (password: string, hash: string) => {
+    //     return await bcrypt.compare(password, hash);
+    // }
 }
 
 export default EncryptionHelper;

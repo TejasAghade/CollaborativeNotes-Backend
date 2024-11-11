@@ -3,6 +3,7 @@ import EncryptionHelper from "../../helpers/encryption.helper";
 import ApiResponse, { serverError } from "../../utils/response/api_response";
 import { v4 as uuidv4 } from 'uuid';
 import jwt from 'jsonwebtoken';
+import redisClient from "../../redis/redis";
 
 class UserService {
 
@@ -10,12 +11,26 @@ class UserService {
 
         try {
 
+            const cachedUsers = await redisClient.get('user:userData');
+
+            if ((JSON.parse(cachedUsers) || []).length != 0) {
+                console.log("users is in cache");
+                return new ApiResponse(
+                    "success!",
+                    [],
+                    JSON.parse(cachedUsers),
+                    200,
+                );
+            }
+
             const users = await User.findAll({
                 attributes: ['fullName', 'email', 'uId']
             });
 
-            const userJson = users.map((user: any) => user.toJSON())
+            const userJson = users.map((user: any) => user.toJSON());
 
+            await redisClient.set('user:userData', JSON.stringify(userJson));
+            await redisClient.expire('user:userData', 60 * 60 * 24)
 
             if (users.length == 0) {
                 return new ApiResponse(
@@ -71,11 +86,31 @@ class UserService {
                 )
             }
 
-            const encryptedPassword = await EncryptionHelper.encryptPassword(password);
+
+
+            const isUserExist = await User.findOne({
+                where: {
+                    email: email
+                }
+            });
+
+            if (!!isUserExist && !!isUserExist.dataValues) {
+                return new ApiResponse(
+                    "User already exist",
+                    [],
+                    null,
+                    400,
+                )
+            }
+
+
+            const encryptedPassword = await EncryptionHelper.encrypt(password);
 
             let uId = uuidv4();
 
             await User.create({ uId: uId, fullName: fullName, email: email, password: encryptedPassword });
+
+            await redisClient.expire('user:userData', 15)
 
             const data = { uId, fullName, email };
 
@@ -141,8 +176,10 @@ class UserService {
                 )
             }
 
+            let decryptedPass = EncryptionHelper.decrypt(user.dataValues.password);
 
-            if (!await EncryptionHelper.validatePassoword(password, user.dataValues.password)) {
+            // using crypto
+            if (password !== decryptedPass) {
                 return new ApiResponse(
                     "Invalid credentials",
                     ["Invalid credentials"],
@@ -150,6 +187,16 @@ class UserService {
                     401,
                 );
             }
+
+            // using bcrypt
+            // if (!await EncryptionHelper.validatePassoword(password, user.dataValues.password)) {
+            //     return new ApiResponse(
+            //         "Invalid credentials",
+            //         ["Invalid credentials"],
+            //         null,
+            //         401,
+            //     );
+            // }
 
 
             const data = {
@@ -159,9 +206,6 @@ class UserService {
             };
 
             const accessToken = UserService.generateAccessToken(data);
-
-            console.log(accessToken);
-
 
             return new ApiResponse(
                 "loggedin!",

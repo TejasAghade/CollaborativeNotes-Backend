@@ -13,6 +13,8 @@ declare global {
       IV: string;
       ACCESS_TOKEN_SECRET: string;
       ACCESS_TOKEN_EXPIRY: string;
+      REDIS_PORT: string;
+      REDIS_HOST: string;
       // add more environment variables and their types here
     }
   }

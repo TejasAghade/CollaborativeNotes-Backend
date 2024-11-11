@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
-import { sequelize } from "../app";
 import { User } from "./user.schema";
 import Note from "./notes.schema";
+import { sequelize } from "../db/dbcon";
 
 const Collaborators = sequelize.define(
     'collaborators',

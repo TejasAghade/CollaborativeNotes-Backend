@@ -5,6 +5,7 @@ import { User } from "../../squalize_schema/user.schema";
 import ApiResponse, { serverError } from "../../utils/response/api_response";
 import { v4 as uuidv4 } from 'uuid';
 import { socketIo } from "../../app";
+import redisClient from "../../redis/redis";
 
 class NotesService {
 
@@ -161,6 +162,19 @@ class NotesService {
 
         try {
 
+            const collabrts = await redisClient.get("notes:Collaborators");
+
+            if ((JSON.parse(collabrts) || []).length != 0) {
+                console.log("collaborators in cache");
+
+                return new ApiResponse(
+                    "",
+                    null,
+                    JSON.parse(collabrts),
+                    200,
+                );
+            }
+
             const users = await User.findAll({
                 attributes: ['uId', 'fullName', 'email'],
                 include: [{
@@ -171,6 +185,8 @@ class NotesService {
                 }],
             });
 
+            await redisClient.set("notes:Collaborators", JSON.stringify(users))
+            await redisClient.expire("notes:Collaborators", 60 * 60 * 24);
 
             if (users.length === 0) {
                 return new ApiResponse(
@@ -210,6 +226,8 @@ class NotesService {
 
             const collab = await Collaborators.create({ collabId: uuidv4(), noteId, userId: uId, role });
 
+            await redisClient.expire("notes:Collaborators", 15)
+
             return new ApiResponse(
                 "Collaborator added!",
                 [],
@@ -224,7 +242,7 @@ class NotesService {
 
     public static updateNote = async (params: any, socket: Socket) => {
 
-        const { noteId, content, userId } = params;
+        const { noteId, content, title, userId } = params;
 
         try {
 
@@ -247,6 +265,7 @@ class NotesService {
 
             if (note) {
                 note.dataValues.content = content;
+                note.dataValues.title = title;
                 await note.save();
 
                 socketIo.to(noteId).emit('noteUpdated', note.dataValues);

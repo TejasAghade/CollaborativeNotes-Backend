@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "8675e92d-12d0-44e1-9d20-23283d9164f1",
 		"name": "Collaborative Note",
-		"description": "GraphQL Api's for the collaborative notes application that allow users to collaborate on a note and change and watch the changes realtime with websockets connection and GraphQL api's.",
+		"description": "GraphQL Api's for the collaborative notes application that allow users to collaborate on a note and change and watch the changes realtime with websockets connection and GraphQL api's.\n\nsome api's uses caching (redis) for improvement in perfomance.\n\nThe graphQl server is running on port \\[localhost\\]:4000/gql\n\nThe websocket server is running on [http://localhost:4000](http://localhost:4000)\n\n- To join the room/note to collaborate it requires noteId and userId on joinNote event.\n    \n- Update note will be on updateNote it takes params : noteId, title, content, userId",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "24576986"
 	},
@@ -19,7 +19,7 @@
 							"mode": "graphql",
 							"graphql": {
 								"query": "query LoginUser($userData: UserInput!) {\r\n  loginUser(userData: $userData) {\r\n    success\r\n    message\r\n    statusCode\r\n    errors\r\n    data {\r\n      fullName\r\n      email\r\n      token\r\n    }\r\n  }\r\n}\r\n",
-								"variables": "{\r\n  \"userData\": {\r\n    \"email\": \"john@abc.com\",\r\n    \"password\": \"1234\"\r\n  }\r\n}"
+								"variables": "{\r\n  \"userData\": {\r\n    \"email\": \"tejas.a@gmail.com\",\r\n    \"password\": \"Tejas123\"\r\n  }\r\n}"
 							}
 						},
 						"url": {
@@ -46,7 +46,7 @@
 							"mode": "graphql",
 							"graphql": {
 								"query": "mutation RegisterUser($userData: UserInput!) {\r\n  registerUser(userData: $userData) {\r\n    success\r\n    message\r\n    statusCode\r\n    errors\r\n    data {\r\n      uId\r\n      fullName\r\n      email\r\n      token\r\n    }\r\n  }\r\n}",
-								"variables": "{\r\n  \"userData\": {\r\n    \"email\": \"tejas.a@gmail.com\",\r\n    \"fullName\": \"Tejas A\",\r\n    \"password\": \"Tejas123\"\r\n  }\r\n}"
+								"variables": "{\r\n  \"userData\": {\r\n    \"email\": \"jack.a@gmail.com\",\r\n    \"fullName\": \"jack A\",\r\n    \"password\": \"jack123\"\r\n  }\r\n}"
 							}
 						},
 						"url": {
@@ -83,7 +83,7 @@
 								"{{wsUrl}}"
 							]
 						},
-						"description": "### Query Description\n\nThis makes an request to **`getUser`** mutation to retrieve user data.\n\n#### JSON Response\n\nThe response is in JSON format and Content-Type as application/json:\n\n``` json\n{\n    \"data\": {\n        \"getUsers\": {\n            \"success\": true,\n            \"message\": \"success!\",\n            \"statusCode\": 200,\n            \"errors\": [],\n            \"data\": [\n                {\n                    \"uId\": \"b1fa8f76-d70c-41e4-886d-14b81cb67b63\",\n                    \"fullName\": \"john\",\n                    \"email\": \"john@abc.com\"\n                },\n                {\n                    \"uId\": \"21749d1f-5b02-469a-b790-abbe511684dd\",\n                    \"fullName\": \"john\",\n                    \"email\": \"john@abc.com\"\n                },\n            ]\n        }\n    }\n}\n\n ```"
+						"description": "### Query Description\n\nThis makes an request to **`getUser`** mutation to retrieve user data.\n\nThis query uses caching to fetch users\n\n#### JSON Response\n\nThe response is in JSON format and Content-Type as application/json:\n\n``` json\n{\n    \"data\": {\n        \"getUsers\": {\n            \"success\": true,\n            \"message\": \"success!\",\n            \"statusCode\": 200,\n            \"errors\": [],\n            \"data\": [\n                {\n                    \"uId\": \"b1fa8f76-d70c-41e4-886d-14b81cb67b63\",\n                    \"fullName\": \"john\",\n                    \"email\": \"john@abc.com\"\n                },\n                {\n                    \"uId\": \"21749d1f-5b02-469a-b790-abbe511684dd\",\n                    \"fullName\": \"john\",\n                    \"email\": \"john@abc.com\"\n                },\n            ]\n        }\n    }\n}\n\n ```"
 					},
 					"response": []
 				}
@@ -136,7 +136,7 @@
 							"mode": "graphql",
 							"graphql": {
 								"query": "mutation AddCollaborator($uId: String, $noteId: String, $role: String) {\r\n  addCollaborator(uId: $uId, noteId: $noteId, role: $role) {\r\n    success\r\n    message\r\n    statusCode\r\n    errors\r\n    data {\r\n      noteId\r\n      \r\n      createdAt\r\n      updatedAt\r\n      role\r\n    }\r\n  }\r\n}",
-								"variables": "{\r\n  \"uId\": \"67367791-50c4-4ada-8dc2-110218d68eca\",\r\n  \"noteId\": \"e4c09b4c-de8c-46d2-8696-6874530cefb0\",\r\n  \"role\": \"editor\"\r\n}"
+								"variables": "{\r\n  \"uId\": \"407b5228-8ac1-4474-8622-48c36e323df4\",\r\n  \"noteId\": \"445d359f-1e18-4b39-b27e-1b0722c5dfb0\",\r\n  \"role\": \"editor\"\r\n}"
 							}
 						},
 						"url": {
@@ -192,7 +192,7 @@
 							"mode": "graphql",
 							"graphql": {
 								"query": "query GetCollaborators($noteId: String) {\r\n  getCollaborators(noteId: $noteId) {\r\n    success\r\n    message\r\n    statusCode\r\n    errors\r\n    data {\r\n      uId\r\n      fullName\r\n      email\r\n      role\r\n    }\r\n  }\r\n}",
-								"variables": "{\r\n  \"noteId\": \"e3078378-8343-4282-83b3-0413a62eb154\"\r\n}"
+								"variables": "{\r\n  \"noteId\": \"445d359f-1e18-4b39-b27e-1b0722c5dfb0\"\r\n}"
 							}
 						},
 						"url": {
@@ -201,7 +201,7 @@
 								"{{wsUrl}}"
 							]
 						},
-						"description": "### Query Description\n\nThis `getCollaborators` Query allows the users to retrieve collaborators' of the notes.\n\n### JSON Response\n\n``` json\n{\n    \"data\": {\n        \"getCollaborators\": {\n            \"success\": true,\n            \"message\": \"\",\n            \"statusCode\": 200,\n            \"errors\": null,\n            \"data\": [\n                {\n                    \"uId\": \"5b63a042-6240-45fe-b6cc-5daca2a36d85\",\n                    \"fullName\": \"john\",\n                    \"email\": \"john@abc.com\",\n                    \"role\": \"VIEWER\"\n                },\n                {\n                    \"uId\": \"67367791-50c4-4ada-8dc2-110218d68eca\",\n                    \"fullName\": \"Tejas A.\",\n                    \"email\": \"tejas.a@gmail.com\",\n                    \"role\": \"editor\"\n                }\n            ]\n        }\n    }\n}\n\n ```"
+						"description": "### Query Description\n\nThis `getCollaborators` Query allows the users to retrieve collaborators' of the notes.\n\nThis Query uses caching to fetch collaborators\n\n### JSON Response\n\n``` json\n{\n    \"data\": {\n        \"getCollaborators\": {\n            \"success\": true,\n            \"message\": \"\",\n            \"statusCode\": 200,\n            \"errors\": null,\n            \"data\": [\n                {\n                    \"uId\": \"5b63a042-6240-45fe-b6cc-5daca2a36d85\",\n                    \"fullName\": \"john\",\n                    \"email\": \"john@abc.com\",\n                    \"role\": \"VIEWER\"\n                },\n                {\n                    \"uId\": \"67367791-50c4-4ada-8dc2-110218d68eca\",\n                    \"fullName\": \"Tejas A.\",\n                    \"email\": \"tejas.a@gmail.com\",\n                    \"role\": \"editor\"\n                }\n            ]\n        }\n    }\n}\n\n ```"
 					},
 					"response": []
 				},
@@ -220,7 +220,7 @@
 							"mode": "graphql",
 							"graphql": {
 								"query": "mutation CreateNote($note: NoteInput) {\r\n  createNote(note: $note) {\r\n    success\r\n    message\r\n    statusCode\r\n    errors\r\n    data {\r\n      noteId\r\n      title\r\n      content\r\n      createdBy\r\n      updatedBy\r\n      createdAt\r\n      updatedAt\r\n      role\r\n    }\r\n  }\r\n}",
-								"variables": "{\r\n  \"note\": {\r\n    \"title\" : \"grocery list\",\r\n    \"content\" : \"1. milk  2. bred  3. eggs\",\r\n    \"createdBy\" : \"926bc33a-acc1-4b18-883a-7e9b66aa2069\",\r\n    \"updatedBy\":\"926bc33a-acc1-4b18-883a-7e9b66aa2069\"\r\n  }\r\n}"
+								"variables": "{\r\n  \"note\": {\r\n    \"title\" : \"grocery list\",\r\n    \"content\" : \"1. milk  2. bred  3. eggs\",\r\n    \"createdBy\" : \"23b9a905-0921-404d-8733-cb2aad88f07a\",\r\n    \"updatedBy\":\"23b9a905-0921-404d-8733-cb2aad88f07a\"\r\n  }\r\n}"
 							}
 						},
 						"url": {

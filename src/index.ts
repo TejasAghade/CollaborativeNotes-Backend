@@ -1,9 +1,10 @@
-import app, { connectDB, server } from "./app";
+import app, { server } from "./app";
 import { expressMiddleware } from '@apollo/server/express4';
 import startGqlServer from "./graphql";
 import cors from 'cors';
 import UserService from "./services/user/user.service";
 import SocketIoService from "./services/socket/socket_io.service";
+import { connectDB } from "./db/dbcon";
 
 
 connectDB().then(async (value) => {
