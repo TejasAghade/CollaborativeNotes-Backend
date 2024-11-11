@@ -1,0 +1,268 @@
+{
+	"info": {
+		"_postman_id": "8675e92d-12d0-44e1-9d20-23283d9164f1",
+		"name": "Collaborative Note",
+		"description": "GraphQL Api's for the collaborative notes application that allow users to collaborate on a note and change and watch the changes realtime with websockets connection and GraphQL api's.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24576986"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query LoginUser($userData: UserInput!) {\r\n  loginUser(userData: $userData) {\r\n    success\r\n    message\r\n    statusCode\r\n    errors\r\n    data {\r\n      fullName\r\n      email\r\n      token\r\n    }\r\n  }\r\n}\r\n",
+								"variables": "{\r\n  \"userData\": {\r\n    \"email\": \"john@abc.com\",\r\n    \"password\": \"1234\"\r\n  }\r\n}"
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4000/gql",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"gql"
+							]
+						},
+						"description": "### Query Description\n\nThe `LoginUser` query is used to log in a user. The request should include the necessary credentials for authentication.\n\n#### JSON Response\n\nThe response is a JSON object :\n\n``` json\n{\n    \"data\": {\n        \"loginUser\": {\n            \"success\": true,\n            \"message\": \"loggedin!\",\n            \"statusCode\": 200,\n            \"errors\": [],\n            \"data\": {\n                \"fullName\": \"john\",\n                \"email\": \"john@abc.com\",\n                \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1SWQiOiJiMWZhOGY3Ni1kNzBjLTQxZTQtODg2ZC0xNGI4MWNiNjdiNjMiLCJlbWFpbCI6ImpvaG5AYWJjLmNvbSIsImZ1bGxOYW1lIjoiam9obiIsImlhdCI6MTczMTI1Mjk2MywiZXhwIjoxNzMxODU3NzYzfQ.YEPrqi7-AnwamUPq044d1wsb7LUOj_4b2XmCX92Q-yo\"\n            }\n        }\n    }\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation RegisterUser($userData: UserInput!) {\r\n  registerUser(userData: $userData) {\r\n    success\r\n    message\r\n    statusCode\r\n    errors\r\n    data {\r\n      uId\r\n      fullName\r\n      email\r\n      token\r\n    }\r\n  }\r\n}",
+								"variables": "{\r\n  \"userData\": {\r\n    \"email\": \"tejas.a@gmail.com\",\r\n    \"fullName\": \"Tejas A\",\r\n    \"password\": \"Tejas123\"\r\n  }\r\n}"
+							}
+						},
+						"url": {
+							"raw": "{{wsUrl}}",
+							"host": [
+								"{{wsUrl}}"
+							]
+						},
+						"description": "### Mutation Description\n\nThis make request `registerUser` mutation to to register a user.\n\n#### JSON Response\n\nThe API returns a JSON response :\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"data\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"registerUser\": {\n          \"type\": \"object\",\n          \"properties\": {\n            \"success\": \"boolean\",\n            \"message\": \"string\",\n            \"statusCode\": \"integer\",\n            \"errors\": \"array\",\n            \"data\": {\n                \"uId\": \",\n                \"fullName\": \"string\",\n                \"email\": \"string\",\n                \"token\": \"string\"\n            }\n          }\n        }\n      }\n    }\n  }\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "getUsers",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1SWQiOiJiMWZhOGY3Ni1kNzBjLTQxZTQtODg2ZC0xNGI4MWNiNjdiNjMiLCJlbWFpbCI6ImpvaG5AYWJjLmNvbSIsImZ1bGxOYW1lIjoiam9obiIsImlhdCI6MTczMTI1MDk4MCwiZXhwIjoxNzMxODU1NzgwfQ.5p562exNJqe9RzhviFsPYpwy6P7ggQ4Bs9W8Vzi0mZo",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query GetUsers {\r\n  getUsers {\r\n    success\r\n    message\r\n    statusCode\r\n    errors\r\n    data {\r\n      uId\r\n      fullName\r\n      email\r\n    }\r\n  }\r\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{wsUrl}}",
+							"host": [
+								"{{wsUrl}}"
+							]
+						},
+						"description": "### Query Description\n\nThis makes an request to **`getUser`** mutation to retrieve user data.\n\n#### JSON Response\n\nThe response is in JSON format and Content-Type as application/json:\n\n``` json\n{\n    \"data\": {\n        \"getUsers\": {\n            \"success\": true,\n            \"message\": \"success!\",\n            \"statusCode\": 200,\n            \"errors\": [],\n            \"data\": [\n                {\n                    \"uId\": \"b1fa8f76-d70c-41e4-886d-14b81cb67b63\",\n                    \"fullName\": \"john\",\n                    \"email\": \"john@abc.com\"\n                },\n                {\n                    \"uId\": \"21749d1f-5b02-469a-b790-abbe511684dd\",\n                    \"fullName\": \"john\",\n                    \"email\": \"john@abc.com\"\n                },\n            ]\n        }\n    }\n}\n\n ```"
+					},
+					"response": []
+				}
+			],
+			"description": "Queries and Mutations for user related operations.\n\n1. loginUser - Query to authenticate user.\n    \n2. registerUser - Mutation to register a new user.\n    \n3. getUsers - Query fetch all the users."
+		},
+		{
+			"name": "Notes",
+			"item": [
+				{
+					"name": "getNotes",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1SWQiOiJiMWZhOGY3Ni1kNzBjLTQxZTQtODg2ZC0xNGI4MWNiNjdiNjMiLCJlbWFpbCI6ImpvaG5AYWJjLmNvbSIsImZ1bGxOYW1lIjoiam9obiIsImlhdCI6MTczMTI1MDk4MCwiZXhwIjoxNzMxODU1NzgwfQ.5p562exNJqe9RzhviFsPYpwy6P7ggQ4Bs9W8Vzi0mZo",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query GetNotes($uId: String) {\r\n  getNotes(uId: $uId) {\r\n    success\r\n    message\r\n    statusCode\r\n    errors\r\n    data {\r\n      noteId\r\n      title\r\n      content\r\n      createdBy\r\n      updatedBy\r\n      createdAt\r\n      updatedAt\r\n      role\r\n    }\r\n  }\r\n}",
+								"variables": "{\r\n  \"uId\": \"67367791-50c4-4ada-8dc2-110218d68eca\"\r\n}"
+							}
+						},
+						"url": {
+							"raw": "{{wsUrl}}",
+							"host": [
+								"{{wsUrl}}"
+							]
+						},
+						"description": "### Query Description\n\nThis query allows the client to submit a request `getNotes` mutation in order to fetch the notes where user is a collaborator.\n\n#### Variables\n\nThe variable uId for this query is of type string.\n\n#### JSON Response\n\n``` json\n{\n    \"data\": {\n        \"getNotes\": {\n            \"success\": true,\n            \"message\": \"\",\n            \"statusCode\": 200,\n            \"errors\": null,\n            \"data\": [\n                {\n                    \"noteId\": \"8846121b-e052-4210-90b9-353cb27339cb\",\n                    \"title\": \"1 this is first note\",\n                    \"content\": \"1 this is content\",\n                    \"createdBy\": \"67367791-50c4-4ada-8dc2-110218d68eca\",\n                    \"updatedBy\": null,\n                    \"createdAt\": \"2024-11-09T18:15:16.687Z\",\n                    \"updatedAt\": \"2024-11-09T18:15:16.687Z\",\n                    \"role\": \"Admin\"\n                }\n            ]\n        }\n    }\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "addCollaborators",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1SWQiOiJiMWZhOGY3Ni1kNzBjLTQxZTQtODg2ZC0xNGI4MWNiNjdiNjMiLCJlbWFpbCI6ImpvaG5AYWJjLmNvbSIsImZ1bGxOYW1lIjoiam9obiIsImlhdCI6MTczMTI1MDk4MCwiZXhwIjoxNzMxODU1NzgwfQ.5p562exNJqe9RzhviFsPYpwy6P7ggQ4Bs9W8Vzi0mZo",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation AddCollaborator($uId: String, $noteId: String, $role: String) {\r\n  addCollaborator(uId: $uId, noteId: $noteId, role: $role) {\r\n    success\r\n    message\r\n    statusCode\r\n    errors\r\n    data {\r\n      noteId\r\n      \r\n      createdAt\r\n      updatedAt\r\n      role\r\n    }\r\n  }\r\n}",
+								"variables": "{\r\n  \"uId\": \"67367791-50c4-4ada-8dc2-110218d68eca\",\r\n  \"noteId\": \"e4c09b4c-de8c-46d2-8696-6874530cefb0\",\r\n  \"role\": \"editor\"\r\n}"
+							}
+						},
+						"url": {
+							"raw": "{{wsUrl}}",
+							"host": [
+								"{{wsUrl}}"
+							]
+						},
+						"description": "### Mutation Description\n\n`AddCollaborator` mutation is used to add a user as a collaborator to a specific note.\n\n#### JSON Response\n\n``` json\n{\n    \"data\": {\n        \"addCollaborator\": {\n            \"success\": true,\n            \"message\": \"Collaborator added!\",\n            \"statusCode\": 201,\n            \"errors\": [],\n            \"data\": {\n                \"noteId\": \"e4c09b4c-de8c-46d2-8696-6874530cefb0\",\n                \"createdAt\": \"1731251500379\",\n                \"updatedAt\": \"1731251500379\",\n                \"role\": \"editor\"\n            }\n        }\n    }\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "getNoteById",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1SWQiOiJiMWZhOGY3Ni1kNzBjLTQxZTQtODg2ZC0xNGI4MWNiNjdiNjMiLCJlbWFpbCI6ImpvaG5AYWJjLmNvbSIsImZ1bGxOYW1lIjoiam9obiIsImlhdCI6MTczMTI1MDk4MCwiZXhwIjoxNzMxODU1NzgwfQ.5p562exNJqe9RzhviFsPYpwy6P7ggQ4Bs9W8Vzi0mZo",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query GetNoteById($noteId: String, $uId: String) {\r\n  getNoteById(noteId: $noteId, uId: $uId) {\r\n    success\r\n    message\r\n    statusCode\r\n    errors\r\n    data {\r\n      noteId\r\n      title\r\n      content\r\n      createdBy\r\n      updatedBy\r\n      createdAt\r\n      updatedAt\r\n      role\r\n    }\r\n  }\r\n}",
+								"variables": "{\r\n  \"noteId\": \"e3078378-8343-4282-83b3-0413a62eb154\",\r\n  \"uId\": \"67367791-50c4-4ada-8dc2-110218d68eca\"\r\n}"
+							}
+						},
+						"url": {
+							"raw": "{{wsUrl}}",
+							"host": [
+								"{{wsUrl}}"
+							]
+						},
+						"description": "### Query Description\n\nThis query allows the client to retrieve a specific note by noteId and userId.\n\n#### Response Response\n\n``` json\n{\n    \"data\": {\n        \"getNoteById\": {\n            \"success\": true,\n            \"message\": \"\",\n            \"statusCode\": 200,\n            \"errors\": null,\n            \"data\": {\n                \"noteId\": \"e3078378-8343-4282-83b3-0413a62eb154\",\n                \"title\": \"this is first note\",\n                \"content\": \"lets try again\",\n                \"createdBy\": \"926bc33a-acc1-4b18-883a-7e9b66aa2069\",\n                \"updatedBy\": null,\n                \"createdAt\": \"2024-11-09T17:28:36.057Z\",\n                \"updatedAt\": \"2024-11-10T11:32:05.093Z\",\n                \"role\": \"editor\"\n            }\n        }\n    }\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "getCollaborators",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1SWQiOiJiMWZhOGY3Ni1kNzBjLTQxZTQtODg2ZC0xNGI4MWNiNjdiNjMiLCJlbWFpbCI6ImpvaG5AYWJjLmNvbSIsImZ1bGxOYW1lIjoiam9obiIsImlhdCI6MTczMTI1MDk4MCwiZXhwIjoxNzMxODU1NzgwfQ.5p562exNJqe9RzhviFsPYpwy6P7ggQ4Bs9W8Vzi0mZo",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query GetCollaborators($noteId: String) {\r\n  getCollaborators(noteId: $noteId) {\r\n    success\r\n    message\r\n    statusCode\r\n    errors\r\n    data {\r\n      uId\r\n      fullName\r\n      email\r\n      role\r\n    }\r\n  }\r\n}",
+								"variables": "{\r\n  \"noteId\": \"e3078378-8343-4282-83b3-0413a62eb154\"\r\n}"
+							}
+						},
+						"url": {
+							"raw": "{{wsUrl}}",
+							"host": [
+								"{{wsUrl}}"
+							]
+						},
+						"description": "### Query Description\n\nThis `getCollaborators` Query allows the users to retrieve collaborators' of the notes.\n\n### JSON Response\n\n``` json\n{\n    \"data\": {\n        \"getCollaborators\": {\n            \"success\": true,\n            \"message\": \"\",\n            \"statusCode\": 200,\n            \"errors\": null,\n            \"data\": [\n                {\n                    \"uId\": \"5b63a042-6240-45fe-b6cc-5daca2a36d85\",\n                    \"fullName\": \"john\",\n                    \"email\": \"john@abc.com\",\n                    \"role\": \"VIEWER\"\n                },\n                {\n                    \"uId\": \"67367791-50c4-4ada-8dc2-110218d68eca\",\n                    \"fullName\": \"Tejas A.\",\n                    \"email\": \"tejas.a@gmail.com\",\n                    \"role\": \"editor\"\n                }\n            ]\n        }\n    }\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "createNote",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1SWQiOiJiMWZhOGY3Ni1kNzBjLTQxZTQtODg2ZC0xNGI4MWNiNjdiNjMiLCJlbWFpbCI6ImpvaG5AYWJjLmNvbSIsImZ1bGxOYW1lIjoiam9obiIsImlhdCI6MTczMTI1MDk4MCwiZXhwIjoxNzMxODU1NzgwfQ.5p562exNJqe9RzhviFsPYpwy6P7ggQ4Bs9W8Vzi0mZo",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation CreateNote($note: NoteInput) {\r\n  createNote(note: $note) {\r\n    success\r\n    message\r\n    statusCode\r\n    errors\r\n    data {\r\n      noteId\r\n      title\r\n      content\r\n      createdBy\r\n      updatedBy\r\n      createdAt\r\n      updatedAt\r\n      role\r\n    }\r\n  }\r\n}",
+								"variables": "{\r\n  \"note\": {\r\n    \"title\" : \"grocery list\",\r\n    \"content\" : \"1. milk  2. bred  3. eggs\",\r\n    \"createdBy\" : \"926bc33a-acc1-4b18-883a-7e9b66aa2069\",\r\n    \"updatedBy\":\"926bc33a-acc1-4b18-883a-7e9b66aa2069\"\r\n  }\r\n}"
+							}
+						},
+						"url": {
+							"raw": "{{wsUrl}}",
+							"host": [
+								"{{wsUrl}}"
+							]
+						},
+						"description": "### Mutation Request\n\nThis mutation allows users to create a new note.\n\n#### JSON Response\n\n``` json\n{\n    \"data\": {\n        \"createNote\": {\n            \"success\": true,\n            \"message\": \"Note added!\",\n            \"statusCode\": 201,\n            \"errors\": [],\n            \"data\": {\n                \"noteId\": \"5e36ed77-293c-406b-b08d-791b84ac6b92\",\n                \"title\": \"grocery list\",\n                \"content\": \"1. milk  2. bred  3. eggs\",\n                \"createdBy\": \"926bc33a-acc1-4b18-883a-7e9b66aa2069\",\n                \"updatedBy\": null,\n                \"createdAt\": \"1731251557208\",\n                \"updatedAt\": \"1731251557208\",\n                \"role\": null\n            }\n        }\n    }\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "deleteNote",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1SWQiOiJiMWZhOGY3Ni1kNzBjLTQxZTQtODg2ZC0xNGI4MWNiNjdiNjMiLCJlbWFpbCI6ImpvaG5AYWJjLmNvbSIsImZ1bGxOYW1lIjoiam9obiIsImlhdCI6MTczMTI1MDk4MCwiZXhwIjoxNzMxODU1NzgwfQ.5p562exNJqe9RzhviFsPYpwy6P7ggQ4Bs9W8Vzi0mZo",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation DeleteNotes($noteId: String) {\r\n  deleteNotes(noteId: $noteId) {\r\n    success\r\n    message\r\n    statusCode\r\n    errors\r\n    data {\r\n      noteId\r\n      title\r\n      content\r\n      createdBy\r\n      updatedBy\r\n      createdAt\r\n      updatedAt\r\n      role\r\n    }\r\n  }\r\n}",
+								"variables": "{\r\n  \"noteId\": \"32c8aeeb-98f2-4a55-9598-e32a2bbc6f5f\"\r\n}"
+							}
+						},
+						"url": {
+							"raw": "{{wsUrl}}",
+							"host": [
+								"{{wsUrl}}"
+							]
+						},
+						"description": "### Mutation Request\n\nThis mutation makes an request to `deleteNotes` mutation to delete notes.\n\n### JSON Response\n\n``` json\n{\n    \"data\": {\n        \"deleteNotes\": {\n            \"success\": true,\n            \"message\": \"note deleted!\",\n            \"statusCode\": 200,\n            \"errors\": [],\n            \"data\": null\n        }\n    }\n}\n\n ```"
+					},
+					"response": []
+				}
+			],
+			"description": "Queries and Mutations for notes related operations\n\n1. getNotes - Query to fetch all the notes where user is a collaborator or creator\n    \n2. addCollaborator - Mutation to add users as collaborator to notes\n    \n3. getNotesById - Query to get the note object using noteId\n    \n4. getCollaborators - Query to fetch all the collaborators from specific note\n    \n5. createNote - Mutation to create a new note\n    \n6. deleteNote - Mutation to delete a note with noteId"
+		}
+	]
+}
