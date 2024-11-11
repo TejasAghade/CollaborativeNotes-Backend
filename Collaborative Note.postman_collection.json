@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "8675e92d-12d0-44e1-9d20-23283d9164f1",
 		"name": "Collaborative Note",
-		"description": "GraphQL Api's for the collaborative notes application that allow users to collaborate on a note and change and watch the changes realtime with websockets connection and GraphQL api's.\n\nsome api's uses caching (redis) for improvement in perfomance.\n\nThe graphQl server is running on port \\[localhost\\]:4000/gql\n\nThe websocket server is running on [http://localhost:4000](http://localhost:4000)\n\n- To join the room/note to collaborate it requires noteId and userId on joinNote event.\n    \n- Update note will be on updateNote it takes params : noteId, title, content, userId",
+		"description": "GraphQL Api's for the collaborative notes application that allow users to collaborate on a note and change and watch the changes realtime with websockets connection and GraphQL api's.\n\nsome api's uses caching (redis) for improvement in perfomance.\n\nTo run the project use command:\n\n`npm run start`\n\nThe graphQl server is running on port \\[localhost\\]:4000/gql\n\nThe websocket server is running on [http://localhost:4000](http://localhost:4000)\n\n- To join the room/note to collaborate it requires noteId and userId on joinNote event.\n    \n- Update note will be on updateNote it takes params : noteId, title, content, userId",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "24576986"
 	},
