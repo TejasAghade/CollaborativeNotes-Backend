@@ -23,10 +23,9 @@ To run this project, make sure Docker is installed on your system.
 ## Getting Started
 
 1. Clone the repository and navigate to the project directory:
-   ```
-   cd CollaborativeNotes
 
-```
-   npm run start
+`cd CollaborativeNotes`
+
+`npm run start`
 
 
